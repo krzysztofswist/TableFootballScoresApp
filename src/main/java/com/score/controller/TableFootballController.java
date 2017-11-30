@@ -1,7 +1,11 @@
 package com.score.controller;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -16,6 +20,7 @@ import com.score.message.Response;
 import com.score.model.User;
 import com.score.model.tablefootball.TableFootballScore;
 import com.score.model.tablefootball.TableFootballUserPoint;
+import com.score.model.tablefootball.vo.WeekVO;
 import com.score.repo.TableFootballRepository;
 import com.score.repo.TableFootballUserPointRepository;
 import com.score.repo.UserRepository;
@@ -118,6 +123,65 @@ public class TableFootballController {
 				tableFootballScoreJsonVO.getPoint4(), tableFootballScore);
 		userPoints.add(tableFootballUserPoint4);
 		tableFootballRepository.save(tableFootballScore);
+	}
+
+	@RequestMapping("/find/all/table/football/average-score/per/week")
+	public Response findAverageScorePerWeek() {
+
+		Iterable<TableFootballScore> tableFootballScores = tableFootballRepository.findAll();
+		Map<Integer, Map<String, WeekVO>> weekNumberUserWeekVOs = new TreeMap<>();
+		Set<String> usersSet = new HashSet<>();
+		Calendar calendar = Calendar.getInstance();
+		for (TableFootballScore tableFootballScore : tableFootballScores) {
+			Timestamp date = tableFootballScore.getDate();
+			calendar.setTime(date);
+			Integer weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
+			Set<TableFootballUserPoint> tableFootballUserPoints = tableFootballScore.getUserPoints();
+			for (TableFootballUserPoint tableFootballUserPoint : tableFootballUserPoints) {
+				String user = tableFootballUserPoint.getUser().getUserId();
+				usersSet.add(user);
+				Map<String, WeekVO> userWeekVOs = weekNumberUserWeekVOs.get(weekNumber);
+				if (userWeekVOs == null) {
+					userWeekVOs = new TreeMap<>();
+					weekNumberUserWeekVOs.put(weekNumber, userWeekVOs);
+				}
+				WeekVO weekVO = userWeekVOs.get(user);
+				if (weekVO == null) {
+					weekVO = new WeekVO();
+					userWeekVOs.put(user, weekVO);
+				}
+				int games = weekVO.getGames();
+				int points = weekVO.getPoints();
+				weekVO.setGames(games + 1);
+				weekVO.setPoints(points + tableFootballUserPoint.getPoints());
+			}
+		}
+		Double[][] weeksTab = null;
+		List<String> users = new ArrayList<>(usersSet);
+		Collections.sort(users);
+		int numberOfUser = users.size();
+		int i = 0;
+		for (Map.Entry<Integer, Map<String, WeekVO>> entry : weekNumberUserWeekVOs.entrySet()) {
+			int numberOfWeeks = weekNumberUserWeekVOs.keySet().size();
+			if (weeksTab == null)
+				weeksTab = new Double[numberOfWeeks][];
+			Double[] data = new Double[numberOfUser + 1];
+			data[0] = new Double(entry.getKey());
+			weeksTab[i] = data;
+			for (Map.Entry<String, WeekVO> userWeekVO : entry.getValue().entrySet()) {
+				String user = userWeekVO.getKey();
+				int userIndex = users.indexOf(user) + 1;
+				WeekVO weekVO = userWeekVO.getValue();
+				int games = weekVO.getGames();
+				int points = weekVO.getPoints();
+				if (games != 0) {
+					data[userIndex] = points * 1.0 / games;
+				}
+			}
+			i++;
+		}
+
+		return new Response("Done", weeksTab);
 	}
 
 }

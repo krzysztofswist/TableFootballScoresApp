@@ -19,11 +19,11 @@
 <link rel="stylesheet" href="/table-football-scores/css/styles.css">
 </head>
 <body>
-	<div class="container-fluid" ng-app="app" ng-controller="globalController"
-		ng-init="init()">
+	<div class="container-fluid" ng-app="app"
+		ng-controller="globalController" ng-init="init();prepareChart();">
 
 
-		<div class="row" ng-init="getAllScores()">
+		<div class="row" ng-init="getAllScores();getAllAverageScorePerWeek()">
 			<div class="col-md-12">
 				<h3>Table Football Scores</h3>
 				<!-- <span ng-class="{'rank rank-lg rank-03-e2':d.average>1.4,'rank rank-lg rank-03-e4-1':d.average>2.0,'rank rank-lg rank-03-e5':d.average>2.4,'rank rank-lg rank-03-e6':d.average>3.0,'rank rank-lg rank-03-e7':d.average>3.13,'rank rank-lg rank-03-e8-2':d.average>3.4,'rank rank-lg rank-03-e9-1':d.average>3.6,'rank rank-lg rank-03-e9-2':d.average>3.8,'rank rank-lg rank-03-e9-3':d.average>4,}"></span> -->
@@ -107,7 +107,14 @@
 				</form>
 				<p>{{postResultMessage}}</p>
 			</div>
+			<script type="text/javascript"
+			src="https://www.gstatic.com/charts/loader.js"></script>
+		<div class="col-md-6" id="chart_div">
 		</div>
+			
+		</div>
+
+		
 
 	</div>
 </body>
