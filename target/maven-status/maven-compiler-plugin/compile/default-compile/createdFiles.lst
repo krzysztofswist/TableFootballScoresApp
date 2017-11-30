@@ -1,0 +1,13 @@
+com\score\message\Response.class
+com\score\model\tablefootball\TableFootballUserPoint.class
+com\score\model\User.class
+com\score\ServletInitializer.class
+com\score\TableFootballScore.class
+com\score\controller\UserController.class
+com\score\controller\TableFootballController.class
+com\score\repo\TableFootballUserPointRepository.class
+com\score\repo\TableFootballRepository.class
+com\score\repo\UserRepository.class
+com\score\model\tablefootball\TableFootballScore.class
+com\score\controller\WebController.class
+com\score\rest\TableFootballScoreJsonVO.class
