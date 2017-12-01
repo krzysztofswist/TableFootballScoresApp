@@ -185,17 +185,20 @@ app
 
 												if (response.data.status == "Done") {
 													var respData = response.data.data
-													console.log(respData)
-
 													data.addRows(respData);
 													// Set chart options
-
+													var ticks=[];
+													angular.forEach(respData,function(d){
+														ticks.push(d[0]);
+													})
 													var options = {
 														hAxis : {
-															title : 'Week'
+															title : 'Week',
+															ticks:ticks
 														},
 														vAxis : {
-															title : 'Average Points'
+															title : 'Average Points',
+															ticks:[0,1,2,3,4,5]
 														},
 														series : {
 															1 : {
@@ -203,7 +206,7 @@ app
 															}
 														},
 														'width' : 800,
-														'height' : 500
+														'height' : 700
 													};
 
 													var chart = new google.visualization.LineChart(
