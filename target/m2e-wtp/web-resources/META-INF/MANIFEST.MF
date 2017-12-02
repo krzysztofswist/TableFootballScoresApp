@@ -3,7 +3,7 @@ Implementation-Title: Table Football Score
 Implementation-Version: 0.0.1-SNAPSHOT
 Built-By: kswist
 Implementation-Vendor-Id: com.score
-Build-Jdk: 1.8.0_144
+Build-Jdk: 1.8.0_151
 Implementation-URL: http://projects.spring.io/spring-boot/table-footba
  ll-score/
 Created-By: Maven Integration for Eclipse
