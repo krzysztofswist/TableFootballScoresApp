@@ -192,6 +192,8 @@ app
 														ticks.push(d[0]);
 													})
 													var options = {
+														curveType: 'function',
+
 														hAxis : {
 															title : 'Week',
 															ticks:ticks
